@@ -16,7 +16,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
     private final UserService userService;
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProvider jwtProvider;
@@ -24,7 +23,7 @@ public class AuthService {
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
         final User user = userService.getByUsername(authRequest.getUsername());
         if (user == null) {
-            throw new AuthException("Пользователь не найден");
+            throw new AuthException("User does not found");
         }
         if (user.getPassword().equals(authRequest.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
@@ -32,7 +31,7 @@ public class AuthService {
             refreshStorage.put(user.getUsername(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         } else {
-            throw new AuthException("Неправильный пароль");
+            throw new AuthException("Wrong password");
         }
     }
 
@@ -44,7 +43,7 @@ public class AuthService {
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByUsername(username);
                 if (user == null) {
-                    throw new AuthException("Пользователь не найден");
+                    throw new AuthException("User does not found");
                 }
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 return new JwtResponse(accessToken, null);
@@ -61,7 +60,7 @@ public class AuthService {
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByUsername(username);
                 if (user == null) {
-                    throw new AuthException("Пользователь не найден");
+                    throw new AuthException("User does not found");
                 }
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
@@ -69,7 +68,7 @@ public class AuthService {
                 return new JwtResponse(accessToken, newRefreshToken);
             }
         }
-        throw new AuthException("Невалидный JWT токен");
+        throw new AuthException("Invalid JWT token");
     }
 
     //получение объекта Authentication при необходимости

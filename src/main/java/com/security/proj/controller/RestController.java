@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @org.springframework.web.bind.annotation.RestController
@@ -37,6 +38,7 @@ public class RestController {
     }
 
     @PreAuthorize("hasAuthority('SUPER_ADMIN')")
+    @Transactional
     @DeleteMapping("delete")
     public ResponseEntity<Object> deleteUser(@RequestParam String username) {
         try {
@@ -48,6 +50,7 @@ public class RestController {
     }
 
     @PreAuthorize("hasAuthority('MODERATOR')")
+    @Transactional
     @PatchMapping("update")
     public ResponseEntity<Object> updateUser(@RequestParam String username, @RequestParam String fullname) {
         try {

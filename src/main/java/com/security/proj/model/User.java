@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
 
 @Entity
 @Data
@@ -21,8 +20,9 @@ public class User implements Serializable {
     private String password;
     @Column(name = "fullname", columnDefinition = "VARCHAR(255)")
     private String fullname;
-    @Transient
-    private Set<Role> roles;
+    @Column(name = "roles", columnDefinition = "VARCHAR(255)")
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User(String username, String password, String fullname) {
         this.username = username;

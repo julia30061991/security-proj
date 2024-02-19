@@ -33,30 +33,33 @@ public class UserServiceImpl implements UserService {
             throw new Exception("No one field cannot be empty");
         }
         User user = new User(name, password, fullname);
-        Set<Role> roles = new HashSet<>();
         switch (strRole) {
             case "MODERATOR":
-                roles.add(Role.MODERATOR);
+                user.setRole(Role.MODERATOR);
                 break;
             case "SUPER_ADMIN":
-                roles.add(Role.SUPER_ADMIN);
+                user.setRole(Role.SUPER_ADMIN);
                 break;
             case "SIMPLE_USER":
-                roles.add(Role.SIMPLE_USER);
+                user.setRole(Role.SIMPLE_USER);
                 break;
         }
-        user.setRoles(roles);
         userRepository.saveAndFlush(user);
         return user;
     }
 
     @Override
     public void deleteUser(String username) throws Exception {
-        userRepository.deleteByUsername(username);
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            userRepository.deleteByUsername(username);
+        } else {
+            throw new Exception("User does not found");
+        }
     }
 
     @Override
-    public User updateUser(String username, String fullname) throws Exception {
+    public User updateUser(String username, String fullname) {
         User user = userRepository.findByUsername(username);
         if (fullname != null || fullname.isEmpty()) {
             user.setFullname(user.getFullname());

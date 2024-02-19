@@ -5,9 +5,8 @@ import com.security.proj.security.JwtAuthentication;
 import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class JwtUtils {
@@ -20,10 +19,11 @@ public final class JwtUtils {
         return jwtInfoToken;
     }
 
-    private static Set<Role> getRoles(Claims claims) {
-        final List<String> roles = claims.get("roles", List.class);
-        return roles.stream()
-                .map(Role::valueOf)
-                .collect(Collectors.toSet());
+    private static List<Role> getRoles(Claims claims) {
+        final Object object = claims.get("roles");
+        Role role = Role.valueOf(object.toString());
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        return roles;
     }
 }
